@@ -1,0 +1,14 @@
+name: Triggered Workflow
+
+on:
+  repository_dispatch:
+    types: [custom-event]
+
+jobs:
+  run-workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Workflow
+        run: |
+          echo "This workflow was triggered by a custom event!"
+          echo "Event payload: ${{ toJson(github.event.client_payload) }}"
