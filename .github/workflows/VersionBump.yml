@@ -1,0 +1,33 @@
+name: Module Version Bump
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # Runs every 5 minutes
+
+jobs:
+  check-and-bump:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Fetch all history for all branches and tags
+
+      - name: Check for changes in module
+        id: check_changes
+        run: |
+          git diff --quiet '@{5 minutes ago}' HEAD -- commoncore
+          echo "::set-output name=changed::$?"
+
+      - name: Bump version
+        if: steps.check_changes.outputs.changed == '1'
+        run: |
+          echo "Run version bump.."
+
+      - name: Commit and push if changed
+        if: steps.check_changes.outputs.changed == '1'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -am "Bump version for module"
+          git push
