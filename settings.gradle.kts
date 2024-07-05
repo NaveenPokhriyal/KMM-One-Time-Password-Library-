@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "KMM-One-Time-Password-Library"
 include(":app")
- 
+include(":commoncore")
