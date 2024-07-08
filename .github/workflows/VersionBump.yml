@@ -30,25 +30,22 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
-          distribution: 'temurin'
+          distribution: 'adopt'
           java-version: '17'
-          overwrite-settings: false
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
 
       - name: Bump version
         if: steps.check_changes.outputs.changed == '1'
         run: |
           echo "Updating BOM version..."
+          chmod +x ./gradlew
           ./gradlew publishBomModules
-        continue-on-error: true
+          fi
 
-      - name: Commit and push if changed
-        if: steps.check_changes.outputs.changed == '1'
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git commit -am "Bump version for myfeature module"
-          git push
-        continue-on-error: true
+#      - name: Commit and push if changed
+#        if: steps.check_changes.outputs.changed == '1'
+#        run: |
+#          git config --local user.email "action@github.com"
+#          git config --local user.name "GitHub Action"
+#          git commit -am "Bump version for myfeature module"
+#          git push
+#          fi
