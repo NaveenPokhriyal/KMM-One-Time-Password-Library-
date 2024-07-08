@@ -8,11 +8,19 @@ open class PublishBomModulesPlugin : DefaultTask() {
 
     @TaskAction
     fun publishBomModules() {
+        println("start publish module : 0")
         getModulesPaths(project)
-            .map { it.substring(1) }
-            .map { File("$it/$PROPERTIES_FILE") }
-            .filter { it.exists() }
+            .map {
+                println("start publish module : 1 $${it.substring(1)}")
+                it.substring(1) }
+            .map {
+                println("start publish module : 2")
+                File("$it/$PROPERTIES_FILE") }
+            .filter {
+                println("start publish module : 3 ${it.exists()}")
+                it.exists() }
             .forEach { propertiesFile ->
+                println("start bump versions....")
                 bumpVersion(propertiesFile)
             }
     }

@@ -17,14 +17,32 @@ jobs:
       - name: Check for changes in module
         id: check_changes
         run: |
-          git diff --quiet '@{5 minutes ago}' HEAD -- commoncore/
-          echo "changed=$?" >> $GITHUB_OUTPUT
+          if git diff --quiet '@{3 hour ago}' HEAD -- commoncore/; then
+            echo "changed=0" >> $GITHUB_OUTPUT
+          else
+            echo "changed=1" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check output
+        run: |
+          echo "Updating BOM version... $steps.check_changes.outputs.changed"
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          overwrite-settings: false
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
       - name: Bump version
         if: steps.check_changes.outputs.changed == '1'
         run: |
           echo "Updating BOM version..."
           ./gradlew publishBomModules
+        continue-on-error: true
 
       - name: Commit and push if changed
         if: steps.check_changes.outputs.changed == '1'
@@ -33,3 +51,4 @@ jobs:
           git config --local user.name "GitHub Action"
           git commit -am "Bump version for myfeature module"
           git push
+        continue-on-error: true
