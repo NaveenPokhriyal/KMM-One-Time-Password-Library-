@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  check-and-bump:
+  check-and-bump-2:
     runs-on: ubuntu-latest
 
     steps:
