@@ -41,11 +41,11 @@ jobs:
           ./gradlew publishBomModules
           fi
 
-#      - name: Commit and push if changed
-#        if: steps.check_changes.outputs.changed == '1'
-#        run: |
-#          git config --local user.email "action@github.com"
-#          git config --local user.name "GitHub Action"
-#          git commit -am "Bump version for myfeature module"
-#          git push
-#          fi
+      - name: Commit and push if changed
+        if: steps.check_changes.outputs.changed == '1'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -am "Bump version for myfeature module"
+          git push
+          fi
