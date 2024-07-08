@@ -2,21 +2,7 @@ name: Module Version Bump
 
 on:
   schedule:
-    - cron: 0 10,22 * * 1-5
-  workflow_dispatch:
-    inputs:
-      moduleName:
-        type: choice
-        description: 'Select BOM module: retail-components/bom, supply-components/bom'
-        default: 'retail-components/bom'
-        required: true
-        options:
-          - retail-components/bom
-          - supply-components/bom
-      run_reason:
-        description: 'The reason for running it off-schedule (i.e. release blocker, etc.)'
-        required: true
-        default: ''
+    - cron: '*/5 * * * *'  # Runs every 5 minutes
 
 jobs:
   check-and-bump:
@@ -25,23 +11,24 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 0  # Fetch all history for all branches and tags
+          fetch-depth: 0
 
       - name: Check for changes in module
         id: check_changes
         run: |
-          git diff --quiet '@{5 minutes ago}' HEAD -- commoncore
-          echo "::set-output name=changed::$?"
+          git diff --quiet '@{1 day ago}' HEAD -- commoncore/
+          echo "changed=$?" >> $GITHUB_OUTPUT
 
       - name: Bump version
         if: steps.check_changes.outputs.changed == '1'
         run: |
-          echo "Run version bump.."
+          echo "Updating BOM version..."
+          ./gradlew publishBomModules
 
       - name: Commit and push if changed
         if: steps.check_changes.outputs.changed == '1'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git commit -am "Bump version for module"
+          git commit -am "Bump version for myfeature module"
           git push
