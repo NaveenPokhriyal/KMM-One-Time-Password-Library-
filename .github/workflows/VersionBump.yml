@@ -17,7 +17,7 @@ jobs:
       - name: Check for changes in module
         id: check_changes
         run: |
-          git diff --quiet '@{1 day ago}' HEAD -- commoncore/
+          git diff --quiet '@{5 minutes ago}' HEAD -- commoncore/
           echo "changed=$?" >> $GITHUB_OUTPUT
 
       - name: Bump version
