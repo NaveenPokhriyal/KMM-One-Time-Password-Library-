@@ -17,11 +17,17 @@ jobs:
       - name: Check for changes in module
         id: check_changes
         run: |
+          echo "Checking for changes in commoncore/ in the last 2 hours..."
           if git diff --quiet '@{5 hour ago}' HEAD -- commoncore/; then
+            echo "No changes detected"
             echo "changed=0" >> $GITHUB_OUTPUT
           else
+            echo "Changes detected"
             echo "changed=1" >> $GITHUB_OUTPUT
           fi
+          echo "Git diff exit code: $?"
+          echo "Contents of GITHUB_OUTPUT:"
+          cat $GITHUB_OUTPUT
 
       - name: Set up JDK 17
         if: steps.check_changes.outputs.changed == '1'
