@@ -17,6 +17,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //Added new test comment...
+        // Adding new test comment..
         enableEdgeToEdge()
         setContent {
             KMMOneTimePasswordLibraryTheme {
